@@ -42,12 +42,26 @@ export default {
   data() {
     return {
       detail: {},
+      ip: '',
     }
   },
   async fetch() {
     await this.$axios.get(`article/${this.$route.params.slug}`).then((res) => {
       this.detail = res.data.data
     })
+
+    await this.$axios
+      .get('https://api.ipify.org/?format=json')
+      .then((res) => (this.ip = res.data.ip))
+
+    await this.$axios
+      .post(`article/ip`, {
+        ip: this.ip,
+        article: this.$route.params.slug,
+      })
+      .then((res) => {
+        return res
+      })
   },
   head() {
     return {
