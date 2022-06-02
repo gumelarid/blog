@@ -5,9 +5,22 @@ export const state = () => ({
     total: 0,
     page: 0,
     showNext: true,
+    error: false,
+    loading: false,
+    show: false
 });
 
 export const mutations = {
+    setError(state, data) {
+        state.error = data
+    },
+    setLoading(state, data) {
+        state.loading = data
+    },
+    setShow(state, data) {
+        state.show = data
+    },
+
     setNew(state, data) {
         state.articles = data
     },

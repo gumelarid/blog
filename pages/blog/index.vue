@@ -2,23 +2,9 @@
   <div>
     <nuxt-header />
     <nuxt-search />
-    <!-- <div class="container text-center">
-      <div class="d-flex justify-content-center">
-        <div class="category">
-          <span class="link" @click="changeCategory()">All</span>
-          <span
-            v-for="category in categorys"
-            :key="category.key"
-            class="link"
-            @click="changeCategory(category.category_name)"
-            >{{ category.category_name }}</span
-          >
-        </div>
-      </div>
-    </div> -->
-    <nuxt-loading v-if="$fetchState.pending" />
-    <nuxt-error v-else-if="$fetchState.error" />
-    <div v-else>
+    <nuxt-loading v-show="loading" />
+    <nuxt-error v-show="error" />
+    <div v-show="show">
       <div class="text-center my-4">
         <h3>{{ title }}</h3>
       </div>
@@ -53,6 +39,32 @@ export default {
     NuxtLoading,
   },
 
+  // asyncData(context) {
+  //   console.log(context)
+  //   context.store.commit('setLoading', true)
+  //   context.store.commit('setError', false)
+  //   context.store.commit('setShow', false)
+  //   context.store.commit('setPage', 0)
+  //   return context.$axios
+  //     .get(`article?page=${context.store.state.page}&size=1`)
+  //     .then((res) => {
+  //       if (res.data.pagination.totalPages > 1) {
+  //         context.store.commit('setPageNext', true)
+  //       } else {
+  //         context.store.commit('setPageNext', false)
+  //       }
+
+  //       context.store.commit('setArticle', res.data.data)
+  //       context.store.commit('setSearchTitle', 'All Article')
+  //       context.store.commit('setShow', true)
+  //       context.store.commit('setLoading', false)
+  //     })
+  //     .catch((e) => {
+  //       context.store.commit('setLoading', false)
+  //       context.store.commit('setError', true)
+  //     })
+  // },
+
   data() {
     return {
       categorys: [
@@ -71,6 +83,9 @@ export default {
   },
 
   async fetch() {
+    this.$store.commit('setLoading', true)
+    this.$store.commit('setError', false)
+    this.$store.commit('setShow', false)
     this.$store.commit('setPage', 0)
     await this.$axios
       .get(`article?page=${this.pages}&size=${this.size}`)
@@ -83,6 +98,13 @@ export default {
 
         this.$store.commit('setArticle', res.data.data)
         this.$store.commit('setSearchTitle', 'All Article')
+        this.$store.commit('setShow', true)
+        this.$store.commit('setLoading', false)
+      })
+      .catch((err) => {
+        console.log(err)
+        this.$store.commit('setLoading', false)
+        this.$store.commit('setError', true)
       })
   },
 
@@ -111,6 +133,15 @@ export default {
     },
     pages() {
       return this.$store.state.page
+    },
+    error() {
+      return this.$store.state.error
+    },
+    loading() {
+      return this.$store.state.loading
+    },
+    show() {
+      return this.$store.state.show
     },
   },
 

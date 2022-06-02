@@ -1,28 +1,32 @@
 <template>
   <div>
     <div class="container">
-      <div v-for="article in data" :key="article.key" class="card">
-        <div class="card-header">
-          <img :src="article.thumbnail" alt="rover" />
-        </div>
-        <div class="card-body">
-          <span class="tag tag-teal">
-            <nuxt-link
-              class="tag tag-teal"
-              :to="/category/ + article.slug_category"
-              >{{ article.category }}</nuxt-link
-            >
-          </span>
-          <h4>
-            <nuxt-link :to="/blog/ + article.slug_article">{{
-              article.title_article
-            }}</nuxt-link>
-          </h4>
-          <div class="user">
-            <img :src="article.profile" alt="user" />
-            <div class="user-info">
-              <h5>{{ article.user }}</h5>
-              <small>{{ article.createdAt }}</small>
+      <div class="row">
+        <div v-for="article in data" :key="article.key" class="col-md-4">
+          <div class="card">
+            <div class="card-header">
+              <img :src="article.thumbnail" alt="rover" />
+            </div>
+            <div class="card-body">
+              <span class="tag tag-teal">
+                <nuxt-link
+                  class="tag tag-teal"
+                  :to="/category/ + article.slug_category"
+                  >{{ article.category }}</nuxt-link
+                >
+              </span>
+              <h4>
+                <nuxt-link :to="/blog/ + article.slug_article">{{
+                  article.title_article
+                }}</nuxt-link>
+              </h4>
+              <div class="user">
+                <img :src="article.profile" alt="user" />
+                <div class="user-info">
+                  <h5>{{ article.user }}</h5>
+                  <small>{{ article.createdAt }}</small>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -43,19 +47,19 @@ export default {
   box-sizing: border-box;
 }
 
-.container {
+/* .container {
   display: flex;
   width: 1040px;
   justify-content: space-evenly;
   flex-wrap: wrap;
-}
+} */
 .card {
   margin: 10px;
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 2px 20px rgba(0, 0, 0, 0.2);
   overflow: hidden;
-  width: 300px;
+  /* width: 260px; */
 }
 .card-header img {
   width: 100%;

@@ -2,9 +2,9 @@
   <div>
     <nuxt-header />
     <nuxt-search />
-    <nuxt-loading v-if="$fetchState.pending" />
-    <nuxt-error v-else-if="$fetchState.error" />
-    <div v-else>
+    <nuxt-loading v-show="loading" />
+    <nuxt-error v-show="error" />
+    <div v-show="show">
       <div class="text-center my-4">
         <h3>{{ title }}</h3>
       </div>
@@ -38,11 +38,22 @@ export default {
     NuxtLoading,
   },
 
-  async fetch() {
-    await this.$axios.get('article/newarticle').then((res) => {
-      this.$store.commit('setNew', res.data.data)
-      this.$store.commit('setSearchTitle', 'New Article')
-    })
+  asyncData(context) {
+    context.store.commit('setLoading', true)
+    context.store.commit('setError', false)
+    context.store.commit('setShow', false)
+    return context.$axios
+      .get('article/newarticle')
+      .then((res) => {
+        context.store.commit('setShow', true)
+        context.store.commit('setLoading', false)
+        context.store.commit('setNew', res.data.data)
+        context.store.commit('setSearchTitle', 'New Article')
+      })
+      .catch((e) => {
+        context.store.commit('setLoading', false)
+        context.store.commit('setError', true)
+      })
   },
 
   head() {
@@ -64,6 +75,15 @@ export default {
     },
     title() {
       return this.$store.state.title
+    },
+    error() {
+      return this.$store.state.error
+    },
+    loading() {
+      return this.$store.state.loading
+    },
+    show() {
+      return this.$store.state.show
     },
   },
 }
